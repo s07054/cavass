@@ -1,0 +1,129 @@
+Obtaining and build CAVASS (using CMake):
+
+0) obtain and build (compile) wxWidgets (wxwidgets.org) code/libraries
+   (required).
+   optionally obtain and build itk (itk.org) code/libraries.
+   optionally obtain and build mpich2
+   (http://www.mcs.anl.gov/research/projects/mpich2/) code/libraries.
+
+1) obtain a copy of CAVASS from the repository (cava2)
+	a) export CVS_RSH=ssh
+	b) export CVSROOT=grevera@cava2:/home/grevera/cvsroot
+	c) cvs checkout cavass
+
+2) if you don't already have a copy of CMake, you may obtain one from:
+	http://www.cmake.org/HTML/Download.html
+
+3) (Windows)
+	Run CMakeSetup.exe
+		indicate the source code directory (typically cavass)
+		indicate the build directory (typically cavass-build
+			- NOT in the cavass directory)
+		Note:  The same directory (cavass) may be specified for both
+			but checking your changes back in to cvs will be more
+			difficult.
+		Press the 'Configure' button.
+		Indicate the compiler version (typically Visual Studio 8 2005)
+		An error message indicating that wxWidgets could not be found
+			will appear.
+		Click on the value next to wxWidgets_ROOT_DIR
+		Click on ... and indicate the directory containing wxWidgets
+	(optional)	Click on the value next to ITK_DIR
+			Click on ... and indicate the directory containing the
+				ITK build
+		Press Configure
+		Press Configure again
+		Press OK
+	Go to the cavass-build directory and build cavass with Visual Studio.
+		(these instructions are for VC++ v8)
+		Under the Build menu, select Batch Build
+		Check ALL_BUILD Debug.
+		Check ALL_BUILD Release.
+		Press Build.
+		(Although many warning messages will appear, you may ignore
+		them for now.  Eventually, we should correct all of them.)
+	You now have Release and Debug versions of cavass and 3dviewnix command
+		line programs.
+		
+3) (Linux)
+	Create a directory called cavass-build (NOT in the cavass directory)
+	cd cavass-build
+
+	ccmake ../cavass
+	  press 'c' - configure
+		message output is 'wxWidget not found!'
+		press 'e' - exit help
+	  set the following:
+	  CMAKE_BUILD_TYPE			Release
+	  CMAKE_INSTALL_PREFIX			/home/grevera/cavass-build
+	  wxWidgets_CONFIG_EXECUTABLE-NOTFOUND	/home/grevera/wxGTK-2.8.9/buildgtk/wx-config
+	  (optional)	ITK_DIR			/home/grevera/itk-3.10.0-build
+	  then 't' to toggle into advanced mode
+		CMAKE_CXX_FLAGS			-Wno-narrowing
+	  press 'c' - configure
+	  press 'g' - generate
+
+	make
+
+4) When you run cavass for the first time,
+under Edit->Preferences->Directories, set 'CAVASS home directory' to the
+location of the cavass programs (e.g., C:\cavass-build\debug or
+c:\cavass-build\release or /home/grevera/cavass-build).
+----------
+The following are configuration options for wxWidgets:
+    ./configure --disable-shared --enable-monolithic
+    This creates a single, non-shareable version of the wxWidgets library
+    that allows for easy distribution of binaries.
+    Also useful:  --disable-debug --enable-optimise
+        (for O2 optimization level)
+----------
+winstaller directory contains Visual Studio project that is used to create
+the application that installs CAVASS under Windows.
+----------
+windows parallel version:
+    download mpich2 windows implementation from:
+        http://www.mcs.anl.gov/research/projects/mpich2/downloads/index.php?s=downloads
+    documentation available from:
+        http://www.mcs.anl.gov/research/projects/mpich2/documentation/index.php?s=docs
+    test as follows:
+        1. cd "\program files\mpich2\examples\"
+        2. ..\bin\mpiexec -n 5 cpi.exe
+    run cmake and set BUILD_PARALLEL to On
+----------
+how to create doxygen documentation:
+    cd cavass
+    run doxygen  (e.g., \doxygen.exe)
+    results will be in ../cavass-build
+----------
+creating windows installer:
+    Run Visual Studio.
+    File->New->Project.
+    OtherProjectTypes->SetupAndDeployment->SetupProject
+    Set property name:
+        Click on winstaller in Solution Explorer - winstaller window.
+        In Properties window, change ProductName to cavass.
+    Add files.
+        In 'Solution Explorer - CAVASS' frame, click on CAVASS (to make 'File System Editor' icon appear).
+        Then click on 'File System Editor' icon at top.
+        Right click on 'File System On Target Machine->Application Folder'
+        Add all of the .exe's, etc.
+            - executables in cavass-build\Release	to Application Folder
+            - tutorials   in cavass\tutorials		to tutorials
+            - icon        in cavass\cavass.ico
+            - docs        in cavass-build\docs		to docs
+            - misc        in cavass\3dviewnix\FILES\DISPLAY_V1.0.SPC	to FILES
+            - misc        in cavass\3dviewnix\FILES\STRUCTURE_V1.0.SPC	to FILES
+
+    To add shortcut icon:
+        1. In 'Solution Explorer - CAVASS' frame,  click on CAVASS (to make 'File System Editor' icon appear).
+           Then click on 'File System Editor' icon at top.
+        2. In 'File System (CAVASS)' frame, click on 'User's Desktop'.
+        3. Right-click on 'Shortcut to cavass'.  Click on 'Properties Window' menu item.
+        4. Browse and find the file, cavass.ico.
+
+    To create icons/associations for cavass cava files:
+        1. In 'Solution Explorer - CAVASS' frame, click on 'File Types Editor' icon at top.
+        2. In 'File Types (CAVASS)' frame, right-click on 'File Types on Target Machine'
+           and select 'Add File Type'.  Add .IM0 extension and icon.
+----------
+

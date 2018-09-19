@@ -1,0 +1,50 @@
+We are primarily using CAVASS under OpenSUSE Linux.  Here are the steps we 
+follow to install it.  The procedure will most likely be somewhat different 
+on other Linux/Unix systems.
+
+You need to install Gnome development software, cmake, and libtiff-devel.
+  Use the Software Management tool. You can find it in the Control Center 
+  (YaST).  Search for gtk3-devel.  Check the box and apply the change.  The 
+  rest of the Gnome development software (cc, c++, make), if it doesn't come 
+  with gtk3-devel, and libtiff-devel can be installed in the same way. 
+You also need to install wxWidgets:
+go to wxwidgets.org, download wxWidgets-3.1.0.tar.bz2 (or latest version),
+tar xjf wxWidgets-3.1.0.tar.bz2
+cd wxWidgets-3.1.0
+mkdir buildgtk
+cd buildgtk
+../configure --with-gtk
+make
+[wait]
+su
+[enter password]
+make install
+/sbin/ldconfig
+exit
+
+Then you install CAVASS:
+tar xzf cavass-src-1_0_4.tgz
+mkdir cavass-build
+cd cavass-build
+ccmake ../cavass
+c [configure]
+e [exit help]
+go down to CMAKE_BUILD_TYPE, enter, type "Release", enter
+t [toggle advanced mode]
+go down to CMAKE_EXE_LINKER_FLAGS, enter, type "-lm -ltiff", enter
+c [configure]
+e [exit help]
+g [generate and exit]
+make
+[wait]
+in /etc/profile.local put the commands:
+
+VIEWNIX_ENV=~/cavass-build
+PATH=$PATH:~/cavass-build
+export PATH VIEWNIX_ENV
+
+but instead of ~ put the directory where cavass-build is.  Those commands will 
+take effect on your next login.
+
+You may have to change your appearance settings for GTK applications to make
+the button labels readable.
